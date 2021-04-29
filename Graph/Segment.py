@@ -1,4 +1,4 @@
 class Segment:
-    def __init__(self, length, nodes):
-        self.length = length
+    def __init__(self, cost, origin, destination):
+        self.cost = cost
         self.nodes = nodes

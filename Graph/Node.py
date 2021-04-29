@@ -1,5 +1,5 @@
 class Node:
-    def __init__(self, name, segments, nodes):
+    def __init__(self, name, segments, neightbours,x,y):
         self.name = name
         self.segments = segments
-        self.nodes = nodes
+        self.neightbours = neightbours
