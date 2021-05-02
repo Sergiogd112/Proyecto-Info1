@@ -1,0 +1,8 @@
+name,x,y,A,B,C,D,E,F,G
+A,-1,1,None,unk,unk,unk,unk,unk,unk
+B,1,1,None,None,unk,unk,unk,unk,unk
+C,1,-1,None,None,None,unk,unk,unk,unk
+D,-1,-1,None,None,None,None,unk,unk,unk
+E,0.5,0,None,None,None,None,None,unk,unk
+F,2,0,None,None,None,None,None,None,unk
+G,0,2,None,None,None,None,None,None,None
