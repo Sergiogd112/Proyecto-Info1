@@ -1,6 +1,7 @@
 from .Node import Node
 from .Segment import Segment
 from matplotlib import pyplot as plt
+import math
 
 
 class Graph:
@@ -31,21 +32,38 @@ class Graph:
         self.segments.append(node.segments)
 
     def generate_table(self):
+        """generate the table of adjency base on the list of nodes and segments in case it is not provided"""
         table = []
-        for node,segments in zip(self.nodes,self.segments):
-            costs=[]
-            dest=[segment.destination.Name for segment in segments]
+        grouped_segments = {}
+        for segment in self.segments:
+            try:
+                grouped_segments[segment.origin.Name][
+                    segment.destination.Name
+                ] = segment.cost
+            except:
+                grouped_segments[segment.origin.Name] = {
+                    segment.destination.Name: segment.cost
+                }
+        for node in self.nodes:
+            costs = []
+            dest = grouped_segments[node.Name].keys()
             for n in nodes:
                 if n.Name in dest:
-                    for segment in segments:
-                        if segment.destination.Name==n.Name:
-                            costs.append(segment.cost)
+                    costs.append(grouped_segments[node.Name][n.Name])
                 else:
                     costs.append(None)
-            table.append([node]+costs)
-        self.table=table
+            table.append([node] + costs)
+        self.table = table
 
     def from_table(table):
+        """Generates a graph from a table of adjency
+
+        Args:
+            table (list): table of adjency with structure node,x,y,..cost to nth node of destination...
+
+        Returns:
+            Graph: Graph based on the table of adjency
+        """
         names = [line[0] for line in table]
         gnodes = []
         gsegments = []
@@ -73,6 +91,14 @@ class Graph:
         return Graph(gnodes, gsegments, table)
 
     def from_csv(fileName):
+        """Generates a graph based on a csv file with the same format as the table
+
+        Args:
+            fileName (str): filename of the csv file
+
+        Returns:
+            Graph: generated Graph
+        """
         with open(fileName, "r") as f:
             data = [x.split(",") for x in f.read().split("\n")]
         gnodes = []
@@ -112,11 +138,17 @@ class Graph:
                     for segment, cost in zip(segments, line[3:])
                 ]
             )
-            gsegments.concat([segment for segment in segments if segment])
+            gsegments += [segment for segment in segments if segment]
 
         return Graph(gnodes, gsegments, table)
 
     def get_dict(self):
+        """Generates a dictionary based on the graph
+            Not finished
+
+        Returns:
+            dict: dict of the graph
+        """
         graph_dict = {}
         names = [node.name for node in self.nodes]
         for node in self.nodes:
@@ -140,6 +172,9 @@ class Graph:
         )
 
     def plot(self):
+        """Displays the graph using matplotlib
+        Not finished
+        """
         plt.plot(
             [node.Xcoordinate for node in self.nodes],
             [node.Ycoordinate for node in self.nodes],
@@ -147,11 +182,20 @@ class Graph:
         )
         [plt.text(node.Xcoordinate, node.Ycoordinate, node.Name) for node in self.nodes]
         [
-            plt.arrow(
-                line[0].Xcoordinate,
-                line[0].Ycoordinate,
-                dest.Xcoordinate - line[0].Xcoordinate,
-                dest.Ycoordinate - line[0].Ycoordinate,
+            (
+                plt.arrow(
+                    line[0].Xcoordinate,
+                    line[0].Ycoordinate,
+                    dest.Xcoordinate - line[0].Xcoordinate,
+                    dest.Ycoordinate - line[0].Ycoordinate,
+                ),
+                plt.text(
+                    line[0].Xcoordinate
+                    + 0.25 * (dest.Xcoordinate - line[0].Xcoordinate),
+                    line[0].Ycoordinate
+                    + 0.25 * (dest.Ycoordinate - line[0].Ycoordinate),
+                    str(round(seg, 2)),
+                ),
             )
             for line in self.table
             for seg, dest in zip(line[3:], self.nodes)

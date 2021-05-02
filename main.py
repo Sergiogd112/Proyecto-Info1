@@ -6,4 +6,4 @@ if __name__ == "__main__":
     g = Graph.from_csv("Graph.csv")
     print(g)
     pprint(g.segments)
-    # g.plot()
+    g.plot()
