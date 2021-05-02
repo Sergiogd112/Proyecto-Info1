@@ -11,7 +11,8 @@ class Node:
             Xcoordinate (float, optional): X coordinate. Defaults to 0.0.
             Ycoordinate (float, optional): Y coordinate. Defaults to 0.0.
             Neighbors (list, optional): List of nodes connected. Defaults to [].
-        """        self.Name = Name
+        """
+        self.Name = Name
         self.Segments = Segments
         self.Xcoordinate = Xcoordinate
         self.Ycoordinate = Ycoordinate

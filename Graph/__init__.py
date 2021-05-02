@@ -4,22 +4,22 @@ from matplotlib import pyplot as plt
 
 
 class Graph:
-    def __init__(self, nodes=None, segments=None, table=None, name="Noname"):
+    def __init__(self, nodes=[], segments=[], table=None, name="Noname"):
         """Constructor for the Graph class
 
         Args:
-            nodes (Node Iterable, optional): Iterable of the nodes that form the Graph. Defaults to None.
-            segments (Segment Iterable, optional): Iterable of the segments that form the Graph. Defaults to None.
+            nodes (Node Iterable, optional): Iterable of the nodes that form the Graph. Defaults to [].
+            segments (Segment Iterable, optional): Iterable of the segments that form the Graph. Defaults to [].
             table (list, optional): Table of adjency of the graph. Defaults to None.
             name (str, optional): Name. Defaults to "Noname".
-        """        
+        """
         self.name = name
         self.nodes = nodes
         self.segments = segments
         if table:
             self.table = table
         else:
-            self.table = generate_table()
+            self.table = self.generate_table()
 
     def add_node(self, node):
         """Adds a node to the Graph and updates the segments
@@ -30,11 +30,20 @@ class Graph:
         self.nodes.append(node)
         self.segments.append(node.segments)
 
-    # TODO
     def generate_table(self):
         table = []
-        for node in self.nodes:
-            table.append(node)
+        for node,segments in zip(self.nodes,self.segments):
+            costs=[]
+            dest=[segment.destination.Name for segment in segments]
+            for n in nodes:
+                if n.Name in dest:
+                    for segment in segments:
+                        if segment.destination.Name==n.Name:
+                            costs.append(segment.cost)
+                else:
+                    costs.append(None)
+            table.append([node]+costs)
+        self.table=table
 
     def from_table(table):
         names = [line[0] for line in table]
@@ -103,7 +112,7 @@ class Graph:
                     for segment, cost in zip(segments, line[3:])
                 ]
             )
-            gsegments.append([segment for segment in segments if segment])
+            gsegments.concat([segment for segment in segments if segment])
 
         return Graph(gnodes, gsegments, table)
 

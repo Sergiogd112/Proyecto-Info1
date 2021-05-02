@@ -5,4 +5,5 @@ if __name__ == "__main__":
     print("Testing")
     g = Graph.from_csv("Graph.csv")
     print(g)
-    g.plot()
+    pprint(g.segments)
+    # g.plot()
