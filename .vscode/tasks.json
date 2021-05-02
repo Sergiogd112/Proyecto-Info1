@@ -8,6 +8,12 @@
             "type": "shell",
             "command": "python main.py",
             "problemMatcher": []
+        },
+        {
+            "label": "upload",
+            "type": "shell",
+            "command": "git add *;git commit -m update; git push",
+            "problemMatcher": []
         }
     ]
 }
