@@ -2,8 +2,17 @@ from .Node import Node
 from .Segment import Segment
 from matplotlib import pyplot as plt
 
+
 class Graph:
     def __init__(self, nodes=None, segments=None, table=None, name="Noname"):
+        """Constructor for the Graph class
+
+        Args:
+            nodes (Node Iterable, optional): Iterable of the nodes that form the Graph. Defaults to None.
+            segments (Segment Iterable, optional): Iterable of the segments that form the Graph. Defaults to None.
+            table (list, optional): Table of adjency of the graph. Defaults to None.
+            name (str, optional): Name. Defaults to "Noname".
+        """        
         self.name = name
         self.nodes = nodes
         self.segments = segments
@@ -13,15 +22,20 @@ class Graph:
             self.table = generate_table()
 
     def add_node(self, node):
+        """Adds a node to the Graph and updates the segments
+
+        Args:
+            node (Node): Node
+        """
         self.nodes.append(node)
         self.segments.append(node.segments)
 
+    # TODO
     def generate_table(self):
         table = []
         for node in self.nodes:
             table.append(node)
 
-    # TODO
     def from_table(table):
         names = [line[0] for line in table]
         gnodes = []
@@ -117,7 +131,21 @@ class Graph:
         )
 
     def plot(self):
-        plt.plot([node.Xcoordinate for node in self.nodes],[node.Ycoordinate for node in self.nodes],'o')
-        [plt.text(node.Xcoordinate,node.Ycoordinate,node.Name) for node in self.nodes]
-        [plt.arrow(line[0].Xcoordinate,line[0].Ycoordinate,dest.Xcoordinate-line[0].Xcoordinate,dest.Ycoordinate-line[0].Ycoordinate) for line in self.table for seg,dest in zip(line[3:],self.nodes) if seg]
+        plt.plot(
+            [node.Xcoordinate for node in self.nodes],
+            [node.Ycoordinate for node in self.nodes],
+            "o",
+        )
+        [plt.text(node.Xcoordinate, node.Ycoordinate, node.Name) for node in self.nodes]
+        [
+            plt.arrow(
+                line[0].Xcoordinate,
+                line[0].Ycoordinate,
+                dest.Xcoordinate - line[0].Xcoordinate,
+                dest.Ycoordinate - line[0].Ycoordinate,
+            )
+            for line in self.table
+            for seg, dest in zip(line[3:], self.nodes)
+            if seg
+        ]
         plt.show()

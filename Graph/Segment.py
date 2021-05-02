@@ -13,7 +13,7 @@ class Segment:
             destination (str, optional): name of the node of destiny. Defaults to None.
             orgcoords (float tuple, optional): coordinates of the node of origin. Defaults to None.
             destcoords (float tuple, optional): coordinates of the node of destination. Defaults to None.
-        """    
+        """
         if cost != None and cost != "None" and cost != "unk":
             self.cost = cost
         else:
@@ -32,7 +32,7 @@ class Segment:
 
         Returns:
             float: distance between them in the cartesian space
-        """        
+        """
         if n1:
             dist = math.sqrt(
                 (n2.Xcoordinate - n1.Xcoordinate) ** 2
