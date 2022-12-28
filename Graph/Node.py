@@ -41,4 +41,4 @@ class Node:
         else:
             return False
     def __repr__(self):
-        return self.Name+f' ({self.Xcoordinate},{self.Ycoordinate})'
+        return self.Name+f':({self.Xcoordinate},{self.Ycoordinate})'

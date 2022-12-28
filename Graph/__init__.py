@@ -90,7 +90,7 @@ class Graph:
             gsegments.append(segments)
         return Graph(gnodes, gsegments, table)
 
-    def from_csv(fileName):
+    def from_csv(fileName, name=None):
         """Generates a graph based on a csv file with the same format as the table
 
         Args:
@@ -118,6 +118,7 @@ class Graph:
                 else None
                 for n, (dest, cost) in enumerate(zip(data[0][3:], line[3:]))
             ]
+            print(line)
             gnodes.append(
                 Node(
                     Name=line[0],
@@ -140,7 +141,13 @@ class Graph:
             )
             gsegments += [segment for segment in segments if segment]
 
-        return Graph(gnodes, gsegments, table)
+        return Graph(
+            gnodes,
+            gsegments,
+            table,
+            name=fileName.replace(".csv", "") * int(not (bool(name)))
+            + bool(name) * str(name),
+        )
 
     def get_dict(self):
         """Generates a dictionary based on the graph
@@ -166,14 +173,28 @@ class Graph:
 
     def __repr__(self):
         return (
-            f"{self.name}'s table of adjancy:\n["
-            + ",\n".join([x.__repr__() for x in self.table])
-            + "]"
+            f"{self.name}:\nNodes coords:\n{self.nodes.__repr__()}\nTable of adjancy:\n|     | {' | '.join([x.Name.rjust(4,' ') for x in self.nodes])}|\n"
+            + "\n".join(
+                [
+                    "|"
+                    + " | ".join(
+                        [
+                            x.__repr__().rjust(4, " ")
+                            if type(x) != Node and type(x) != float
+                            else x.Name.rjust(4, " ")
+                            if type(x) != float
+                            else str(round(x, 2)).rjust(4, " ")
+                            for x in line
+                        ]
+                    )
+                    + "|"
+                    for line in self.table
+                ]
+            )
         )
 
     def plot(self):
         """Displays the graph using matplotlib
-        Not finished
         """
         plt.plot(
             [node.Xcoordinate for node in self.nodes],
@@ -181,24 +202,20 @@ class Graph:
             "o",
         )
         [plt.text(node.Xcoordinate, node.Ycoordinate, node.Name) for node in self.nodes]
-        [
-            (
-                plt.arrow(
-                    line[0].Xcoordinate,
-                    line[0].Ycoordinate,
-                    dest.Xcoordinate - line[0].Xcoordinate,
-                    dest.Ycoordinate - line[0].Ycoordinate,
-                ),
-                plt.text(
-                    line[0].Xcoordinate
-                    + 0.25 * (dest.Xcoordinate - line[0].Xcoordinate),
-                    line[0].Ycoordinate
-                    + 0.25 * (dest.Ycoordinate - line[0].Ycoordinate),
-                    str(round(seg, 2)),
-                ),
-            )
-            for line in self.table
-            for seg, dest in zip(line[3:], self.nodes)
-            if seg
-        ]
+        for line in self.table:
+            for seg, dest in zip(line[1:], self.nodes):
+                if seg:
+                    plt.arrow(
+                        line[0].Xcoordinate,
+                        line[0].Ycoordinate,
+                        dest.Xcoordinate - line[0].Xcoordinate,
+                        dest.Ycoordinate - line[0].Ycoordinate,
+                    )
+                    plt.text(
+                        line[0].Xcoordinate
+                        + 0.1 * (dest.Xcoordinate - line[0].Xcoordinate),
+                        line[0].Ycoordinate
+                        + 0.1 * (dest.Ycoordinate - line[0].Ycoordinate),
+                        str(round(seg, 2)),
+                    )
         plt.show()
